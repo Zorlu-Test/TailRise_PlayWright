@@ -21,16 +21,15 @@ public class LogIn extends BasePage {
     @FindByPW(locator = "//*[contains(text(),'LOGIN')]")
     public Locator logIn;
 
+
+    /**
+     * That method login trough home page.
+     */
     public void logInMethod() {
         email.type(Configuration_Reader.getProperties("email"));
         password.type(Configuration_Reader.getProperties("password"));
         logIn.click();
     }
-
-
-
-
-
 
 
 }

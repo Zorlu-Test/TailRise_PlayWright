@@ -9,13 +9,14 @@ import java.nio.file.Paths;
 
 public class Driver_PlayWrite {
 
-    static Playwright playwright;
-    static Browser browser;
+    static private Playwright playwright;
+    static private Browser browser;
 
-    // New instance for each test method.
-    static BrowserContext context;
-    static Page page;
+    static private BrowserContext context;
+    static private Page page;
 
+    private Driver_PlayWrite() {
+    }
 
     public static Page driver() {
 
@@ -26,14 +27,15 @@ public class Driver_PlayWrite {
 
         String browserSet = Configuration_Reader.getProperties("browser");
 
-        if (playwright == null) {
+        if (page == null) {
 
             switch (browserSet.toLowerCase()) {
 
                 case "chrome":
                     playwright = Playwright.create();
                     browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setChannel("chrome"));
-                    context = browser.newContext();
+                 //   context = browser.newContext();
+                    context = getAutoLogINContext(); // that part sets auto login if any
                     context.tracing().start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true));
 
 
@@ -60,29 +62,50 @@ public class Driver_PlayWrite {
 
 
             }
-
-
         }
-
-
         return page;
     }
 
     public static BrowserContext context() {
+        return context;
+    }
+
+    /**
+     * this method sets json file only use one time in order to generate json file
+     * */
+    public static BrowserContext setAutoLogINContext() {
+        context.storageState(new BrowserContext.StorageStateOptions().setPath(Paths.get("autoLogIn.json")));
+        return context;
+    }
+
+    /**
+     * This method sets auto login to context if any
+     * */
+    public static BrowserContext getAutoLogINContext() {
+        try {
+            context = browser.newContext(new Browser.NewContextOptions().setStorageStatePath(Paths.get("autoLogIn.json")));
+        }catch (PlaywrightException e){
+            context = browser.newContext();
+        }
 
         return context;
     }
 
 
+
+
+
+
     public static void closeDriver() {
 
-        browser.close();
-        context.close();
-        page.close();
-        playwright.close();
+        if (page != null) {
+            page.close();
+            context.close();
+            browser.close();
+            playwright.close();
+            page = null;
+        }
 
-//        browser.close();
-//        context.close();
 
     }
 

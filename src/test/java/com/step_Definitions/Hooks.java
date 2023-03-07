@@ -15,25 +15,19 @@ public class Hooks {
     public void setUP() {
 
 
-
-
-
-
     }
 
 
     @After
     public void tearDown() {
 
-       // Driver_PlayWrite.context().tracing().stop(new Tracing.StopOptions().setPath(Paths.get("trace/trace.zip")));
-        Driver_PlayWrite.driver().pause();
+        // Driver_PlayWrite.context().tracing().stop(new Tracing.StopOptions().setPath(Paths.get("trace/trace.zip")));
+        //  Driver_PlayWrite.driver().pause();
+
         Driver_PlayWrite.closeDriver();
 
 
-
     }
-
-
 
 
 }

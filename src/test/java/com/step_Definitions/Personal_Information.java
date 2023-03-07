@@ -1,22 +1,24 @@
 package com.step_Definitions;
 
 
-import com.Utilities.Driver_PlayWrite;
-import com.pom.Dash_Board;
 import com.pom.Pages;
 import io.cucumber.java.en.*;
+import org.testng.Assert;
+
+import static com.Utilities.Driver_PlayWrite.driver;
 
 public class Personal_Information extends Pages {
 
 
     @Given("I am on the Home page.")
     public void i_am_on_the_home_page() {
-        Driver_PlayWrite.driver().navigate("http://app.talrise.com.s3-website-eu-west-1.amazonaws.com/");
+        driver().navigate("http://app.talrise.com.s3-website-eu-west-1.amazonaws.com/");
         logIn().logInMethod();
     }
 
     @When("I click on profile button at  side nodule")
     public void iClickOnProfileButtonAtSideNodule() {
+        driver().waitForTimeout(1500);
         dashBoard().profile.click();
         profile().personalInformation.click();
     }
@@ -49,21 +51,47 @@ public class Personal_Information extends Pages {
 
     @When("I refresh page")
     public void i_refresh_page() {
-
+        driver().reload();
+        profile().personalInformation.click();
     }
 
     @Then("Verify entered values holding by application")
     public void verify_entered_values_holding_by_application() {
 
+        String currentMobile = profile().mobile.getAttribute("value");
+        String currentCountry = profile().country.textContent();
+        String currentCity = profile().city.textContent();
+        String currentCodeCountry = profile().countryCode.textContent();
+
+
+        Assert.assertEquals(currentMobile, profile().mobileNumberSelected);
+        Assert.assertEquals(currentCountry, profile().countrySelected);
+        Assert.assertEquals(currentCity, profile().citySelected);
+        Assert.assertEquals(currentCodeCountry, profile().countryCodeSelected);
+
+
     }
 
+    @And("I set none filled places")
+    public void iSetNoneFilledPlaces() {
+        profile().setNonePersonalInformation();
+    }
 
-//    @AfterClass
-//    public void tearDown() {
-//        Driver_PlayWrite.driver().pause();
-//        Driver_PlayWrite.context().tracing().stop(new Tracing.StopOptions().setPath(Paths.get("trace/trace.zip")));
-//        Driver_PlayWrite.closeDriver();
-//
-//    }
+    @And("I click on cancel button")
+    public void iClickOnCancelButton() {
+        profile().cancel.click();
+    }
+
+    @And("I enter {string} mobile phone")
+    public void iEnterMobilePhone(String mobileNumber) {
+        profile().setMobileNumber(mobileNumber);
+    }
+
+    @Then("Verify mobile field error message appears")
+    public void verifyMobileFieldErrorMessageAppears() {
+
+
+    }
+
 
 }

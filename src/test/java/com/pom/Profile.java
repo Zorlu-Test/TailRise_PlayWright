@@ -11,6 +11,11 @@ import static com.Utilities.Driver_PlayWrite.driver;
 
 public class Profile extends BasePage {
 
+    static public String mobileNumberSelected;
+    static public String countrySelected;
+    static public String citySelected;
+    static public String countryCodeSelected;
+
 
     @FindByPW(locator = "//span[contains(text(),'Personal Information')]")
     public Locator personalInformation;
@@ -39,6 +44,14 @@ public class Profile extends BasePage {
     @FindByPW(locator = "(//div/button[@label='save'])[1]")
     public Locator save;
 
+    @FindByPW(locator = "(//div/button[@label='cancel'])[1]")
+    public Locator cancel;
+
+    @FindByPW(locator = "//p[@id='text-field-input-helper-text']")
+    public Locator mobileErrorMsg;
+
+
+
 
     /**
      * This method selects random country from list
@@ -47,6 +60,7 @@ public class Profile extends BasePage {
         country.click();
         int randomNumber = random.nextInt(countriesList.count() - 1) + 1;
 
+        countrySelected = countriesList.nth(randomNumber).textContent();
         countriesList.nth(randomNumber).click();
     }
 
@@ -59,6 +73,7 @@ public class Profile extends BasePage {
         for (int i = 0; i < countriesList.count(); i++) {
             if (countriesList.nth(i).textContent().equals(countryName)) {
                 countriesList.nth(i).click();
+                countrySelected = countriesList.nth(i).textContent();
                 break;
             }
             if (i == countriesList.count() - 1) {
@@ -77,7 +92,9 @@ public class Profile extends BasePage {
         city.click();
         int randomNumber = random.nextInt(cityList.count() - 1) + 1;
 
+        citySelected = cityList.nth(randomNumber).textContent();
         cityList.nth(randomNumber).click();
+
     }
 
 
@@ -90,6 +107,7 @@ public class Profile extends BasePage {
         for (int i = 0; i < cityList.count(); i++) {
             if (cityList.nth(i).textContent().equals(countryName)) {
                 cityList.nth(i).click();
+                citySelected = cityList.nth(i).textContent();
                 break;
             }
             if (i == cityList.count() - 1) {
@@ -109,6 +127,8 @@ public class Profile extends BasePage {
         int randomNumber = random.nextInt(countryCode.count() - 1) + 1;
 
         countryCode.nth(randomNumber).click();
+        countryCodeSelected = countryCode.nth(randomNumber).textContent();
+
     }
 
 
@@ -121,6 +141,7 @@ public class Profile extends BasePage {
         for (int i = 0; i < cityList.count(); i++) {
             if (countryCodeList.nth(i).textContent().equals(countryName)) {
                 countryCodeList.nth(i).click();
+                countryCodeSelected = countryCodeList.nth(i).textContent();
                 break;
             }
             if (i == countryCodeList.count() - 1) {
@@ -132,11 +153,41 @@ public class Profile extends BasePage {
 
 
     /**
-     * This method selects specified Country Code if exists or select none.
+     * This method enter random UK mobile number
      */
     public void setMobileNumber() {
+        mobileNumberSelected = faker.phoneNumber().cellPhone().replace(" ", "");
         mobile.clear();
-        mobile.type(faker.phoneNumber().cellPhone().replace(" ", ""));
+        mobile.type(mobileNumberSelected);
+    }
+
+    /**
+     * This method enter custom mobile number
+     */
+    public void setMobileNumber(String number) {
+        mobileNumberSelected = number;
+        mobile.clear();
+        mobile.type(mobileNumberSelected);
+    }
+
+
+
+
+
+
+    /**
+     * This method  sets none values at the personal information
+     */
+    public void setNonePersonalInformation() {
+
+        city.click();
+        cityList.nth(0).click();
+        countryCode.click();
+        countryCodeList.nth(0).click();
+        country.click();
+        countriesList.nth(0).click();
+        mobile.clear();
+
     }
 
 
