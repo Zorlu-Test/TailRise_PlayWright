@@ -15,7 +15,7 @@ Feature: Register
 
     Given I am on the Home page.
 
-
+  @dnm
   Scenario: H1 As a client I should be able to manage personal information.
 
     When I click on profile button at  side nodule

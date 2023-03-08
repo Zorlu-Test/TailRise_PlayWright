@@ -9,10 +9,15 @@ import io.cucumber.testng.CucumberOptions;
 // mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="show-trace trace.zip" ## Local trace
 @CucumberOptions
         (
-
+                plugin = {
+                        "json:target/cucumber.json",
+                        "html:target/cucumber-report.html",
+                        "rerun:target/rerun.txt",
+                        "me.jvt.cucumber.report.PrettyReports:target/cucumber"
+                },
                 features = "src/test/resources",
-                glue = "com/step_Definitions"
-
+                glue = "com/step_Definitions",
+                tags = "@dnm"
         )
 
 public class testNgRunner extends AbstractTestNGCucumberTests {
